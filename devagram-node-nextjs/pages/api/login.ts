@@ -1,5 +1,6 @@
 import next from 'next'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import {conectarMongoDB} from '../../middlewares/conectarMongoDB'
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
