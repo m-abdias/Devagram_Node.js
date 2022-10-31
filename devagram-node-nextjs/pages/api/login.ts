@@ -1,15 +1,39 @@
-import next from 'next'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import {conectarMongoDB} from '../../middlewares/conectarMongoDB'
-import {RespostaPadraoMsg} from '../../types/RespostaPadraoMsg'
+import { conectarMongoDB } from '../../middlewares/conectarMongoDB'
+import { RespostaPadraoMsg } from '../../types/RespostaPadraoMsg'
+import { LoginResposta } from '../../types/LoginResposta'
+import { UsuarioModel } from '../../models/UsuarioModel'
+import md5 from 'md5'
+import jwt from 'jsonwebtoken'
 
-const endpointLogin = (req: NextApiRequest, res: NextApiResponse<RespostaPadraoMsg>) => {
+const endpointLogin = async (
+  req: NextApiRequest,
+  res: NextApiResponse<RespostaPadraoMsg | LoginResposta>
+) => {
+  const { MINHA_CHAVE_JWT } = process.env
+  if (!MINHA_CHAVE_JWT) {
+    return res.status(500).json({ erro: 'ENV JWT não informada' })
+  }
+
   if (req.method === 'POST') {
     const { login, senha } = req.body
 
-    if (login === 'admin@admin.com' && senha === 'Admin@123') {
-      return res.status(200).json({ msg: 'Usuário autenticado com Sucesso!' })
+    const usuariosEncontrados = await UsuarioModel.find({
+      email: login,
+      senha: md5(senha)
+    })
+    if (usuariosEncontrados && usuariosEncontrados.length > 0) {
+      const usuarioEncontrado = usuariosEncontrados[0]
+
+      const token = jwt.sign({ _id: usuarioEncontrado._id }, MINHA_CHAVE_JWT)
+
+      return res.status(200).json({
+        nome: usuarioEncontrado.nome,
+        email: usuarioEncontrado.email,
+        token
+      })
     }
+
     return res.status(400).json({ erro: 'Usuário ou senha não encontrado.' })
   }
   return res.status(405).json({ erro: 'Método informado não é válido' })
