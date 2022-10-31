@@ -8,7 +8,7 @@ import type {RespostaPadraoMsg} from '../../types/RespostaPadraoMsg';
 const endpointSeguir = 
     async (req : NextApiRequest, res : NextApiResponse<RespostaPadraoMsg>) => {
     try{
-        // if(req.method === 'PUT'){
+        if(req.method === 'PUT'){
 
         //     const {userId, id} = req?.query;
 
@@ -49,7 +49,7 @@ const endpointSeguir =
 
         //         return res.status(200).json({msg : 'Usuario seguido com sucesso'});
         //     }
-        //   }
+          }
         
           return res.status(405).json({erro : 'Metodo informado nao existe'});
       }catch(e){
