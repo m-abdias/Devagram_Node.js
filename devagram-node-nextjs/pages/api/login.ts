@@ -1,8 +1,9 @@
 import next from 'next'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {conectarMongoDB} from '../../middlewares/conectarMongoDB'
+import {RespostaPadraoMsg} from '../../types/RespostaPadraoMsg'
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+const endpointLogin = (req: NextApiRequest, res: NextApiResponse<RespostaPadraoMsg>) => {
   if (req.method === 'POST') {
     const { login, senha } = req.body
 
@@ -13,3 +14,5 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   }
   return res.status(405).json({ erro: 'Método informado não é válido' })
 }
+
+export default conectarMongoDB(endpointLogin)

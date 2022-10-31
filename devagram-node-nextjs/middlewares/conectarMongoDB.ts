@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next'
 import mongoose from 'mongoose'
+import {RespostaPadraoMsg} from '../types/RespostaPadraoMsg'
 
 export const conectarMongoDB =
   (handler: NextApiHandler) =>
-  async (req: NextApiRequest, res: NextApiResponse) => {
+  async (req: NextApiRequest, res: NextApiResponse<RespostaPadraoMsg>) => {
     if (mongoose.connections[0].readyState) {
       return handler(req, res)
     }
@@ -19,8 +20,8 @@ export const conectarMongoDB =
     mongoose.connection.on('connected', () =>
       console.log('Banco de dados conectado')
     )
-    mongoose.connection.on('error', error =>
-      console.log(`Ocorreu erro ao conectar no banco: ${error}`)
+    mongoose.connection.on('erro', erro =>
+      console.log(`Ocorreu erro ao conectar no banco: ${erro}`)
     )
     await mongoose.connect(DB_CONEXAO_STRING)
 
