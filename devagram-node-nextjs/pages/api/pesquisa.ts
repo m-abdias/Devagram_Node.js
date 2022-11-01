@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { conectarMongoDB } from '../../middlewares/conectarMongoDB'
+import { politicaCORS } from '../../middlewares/politicaCORS'
 import { validarTokenJWT } from '../../middlewares/validarTokenJWT'
 import { SeguidorModel } from '../../models/SeguidorModel'
 import { UsuarioModel } from '../../models/UsuarioModel'
@@ -17,31 +18,32 @@ const pesquisaEndpoint = async (
           return res.status(400).json({ erro: 'Usuario nao encontrado' })
         }
 
-        //     const user = {
-        //         senha: null,
-        //         segueEsseUsuario: false,
-        //         nome: usuarioEncontrado.nome,
-        //         email: usuarioEncontrado.email,
-        //         _id: usuarioEncontrado._id,
-        //         avatar: usuarioEncontrado.avatar,
-        //         seguidores: usuarioEncontrado.seguidores,
-        //         seguindo: usuarioEncontrado.seguindo,
-        //         publicacoes: usuarioEncontrado.publicacoes,
-        //     } as any;
+        const user = {
+          senha: null,
+          segueEsseUsuario: false,
+          nome: usuarioEncontrado.nome,
+          email: usuarioEncontrado.email,
+          _id: usuarioEncontrado._id,
+          avatar: usuarioEncontrado.avatar,
+          seguidores: usuarioEncontrado.seguidores,
+          seguindo: usuarioEncontrado.seguindo,
+          publicacoes: usuarioEncontrado.publicacoes
+        } as any
 
-        //     const segueEsseUsuario = await SeguidorModel.find({ usuarioId: req?.query?.userId, usuarioSeguidoId: usuarioEncontrado._id });
-        //     if (segueEsseUsuario && segueEsseUsuario.length > 0) {
-        //         user.segueEsseUsuario = true;
-        //     }
-            return res.status(200).json(usuarioEncontrado);
+        const segueEsseUsuario = await SeguidorModel.find({
+          usuarioId: req?.query?.userId,
+          usuarioSeguidoId: usuarioEncontrado._id
+        })
+        if (segueEsseUsuario && segueEsseUsuario.length > 0) {
+          user.segueEsseUsuario = true
+        }
+        return res.status(200).json(usuarioEncontrado)
       } else {
         const { filtro } = req.query
         if (!filtro || filtro.length < 2) {
-          return res
-            .status(400)
-            .json({
-              erro: 'Favor informar pelo menos 2 caracteres para a busca'
-            })
+          return res.status(400).json({
+            erro: 'Favor informar pelo menos 2 caracteres para a busca'
+          })
         }
 
         const usuariosEncontrados = await UsuarioModel.find({
@@ -51,9 +53,9 @@ const pesquisaEndpoint = async (
           ]
         })
 
-        //     usuariosEncontrados.forEach(userFound => {
-        //         userFound.senha = null
-        //     });
+        usuariosEncontrados.forEach(userFound => {
+          userFound.senha = null
+        })
 
         return res.status(200).json(usuariosEncontrados)
       }
@@ -67,4 +69,4 @@ const pesquisaEndpoint = async (
   }
 }
 
-export default validarTokenJWT(conectarMongoDB(pesquisaEndpoint))
+export default politicaCORS(validarTokenJWT(conectarMongoDB(pesquisaEndpoint)))
