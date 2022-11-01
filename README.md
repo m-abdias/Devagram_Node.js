@@ -1,3 +1,37 @@
+## 💻 Sobre o projeto
+
+Projeto Devagram da Devaria.
+
+
+## 📚 Documentação de API's
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/21027375/2s8YRjpt92)
+
+
+## 📚 Figma do Projeto
+
+[Link Figma](https://www.figma.com/file/9KlZQL9sYthRiqdnehLzpj/Projeto-Devaria-2022)
+
+
+## 🚀 Tecnologias
+
+Esse projeto foi desenvolvido com as seguintes tecnologias:
+
+- Next.Js
+- Node.Js
+- Api disponibilizada na Vercel
+- Banco de Dados MongoDB
+
+
+## 🔗 Deploy API
+
+[Link API](https://devagram-qkw3xpvw3-m-abdias.vercel.app)
+
+
+
+
+_________
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
